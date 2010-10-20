@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>media/maze.jpg</file>
+        <file>media/intro.mp3</file>
+        <file>media/pacman_intro.wav</file>
+    </qresource>
+</RCC>
