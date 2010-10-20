@@ -35,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     mScene->setSceneRect(sceneRect);
    // scene->setBackgroundBrush (QBrush(Qt::blue));
 
+    // now set up the boundries
+    setupBoundries();
+
     QPixmap mazeImage(":/media/maze.jpg");
     int width = screenSize.width();
     mazeImage = mazeImage.scaledToWidth(width);
@@ -50,12 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     pauseButton = new QPushButton("Pause");
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
     pauseButton->setMaximumHeight(40);
-    pauseButton->setMaximumWidth(300);
     QGraphicsProxyWidget *buttonProxy = mScene->addWidget(pauseButton);
     buttonProxy->setPos(0, -220);
-
-    // now set up the boundries
-    setupBoundries();
 
     ui->mainGraphicsView->setScene(mScene);
     ui->mainGraphicsView->show();
@@ -69,42 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // connect the accelerometer to the readingChanged signal
     connect(mAccelerometer, SIGNAL(readingChanged()), this, SLOT(updateReading()));
-
-    //mPlayer = new QMediaPlayer;
-    QMediaResource res(QUrl::fromLocalFile(":/media/pacman_intro.wav"));
-    QString codec = res.audioCodec();
-    QAudioFormat format;
-    // Set up the format, eg.
-    format.setFrequency(8000);
-    format.setChannels(1);
-    format.setSampleSize(8);
-    format.setCodec("audio/pcm");
-    format.setByteOrder(QAudioFormat::LittleEndian);
-    format.setSampleType(QAudioFormat::UnSignedInt);
-
-    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-    if (!info.isFormatSupported(format)) {
-        //qWarning()<<"raw audio format not supported by backend, cannot play audio.";
-        return;
-    }
-      // file.setFileName(":/media/pacman_intro.wav");
-      //  file.open(QIODevice::ReadOnly);
-
-
-      //  int size = file.size();
-
-       // mAudio = new QAudioOutput(format, this);
-      //  file.setParent(mAudio);
-
-      //  mAudio->start(&file);
-       // QSound::play(":/media/pacman_intro.wav");
-
-       // mPlayer->setMedia(QUrl::fromLocalFile(":/media/intro.mp3"));
-        //int leg = mPlayer->duration();
-       // mPlayer->setVolume(100);
-        //mPlayer->play();
-
-
     mNumHits = 1;
 }
 
@@ -114,11 +77,13 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateGraphics() {
-    if (mPause || mNumHits > 1)
+    if (mPause)
         return;
 
     if (!bIsMoving)
         return;
+    // update the pacman mouth state
+    // will eventually change this to a graphic
     switch (mPacState) {
     case 0:
         mPacman->setSpanAngle(5700);
@@ -162,22 +127,11 @@ void MainWindow::updateReading() {
     else if (pt.y()>145)
         pt.setY(145);
 
-
-    QList<QGraphicsItem*> itemList = mScene->items();
-    int itemCount = itemList.count();
-    bool contains = false;
-    for (int i=0;i < itemCount; i++) {
-        QGraphicsItem *item = itemList.at(i);
-        if (item->contains(pt))
-            contains = true;
-    }
     if (mNumHits == 1) {
-        mPacman->setPos(pt);
-
+        mPacman->setPos(pt);      
     }
     else
         mPacman->setPos(mLastPt);
-
 
 }
 
