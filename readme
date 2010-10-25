@@ -1,0 +1,5 @@
+This directory has a list of Qt Examples initially intended for SEE 2010.
+
+Cards - combines the Qt Card example with this images from Open Clipart to demonstrate how to use Flipable to flip playing cards
+
+MixedView - It is the basics of a PacMan game. It uses the accelerometera to move the little icon around the screen. It is a good example of graphics view too. 
