@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     a.installEventFilter(&w);
     w.setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
-    // Symbian specific code
+    // Symbian specific code to keep the screen orientation of the game in Portrait mode.
 #ifdef Q_OS_SYMBIAN
     CAknAppUi* appUi = dynamic_cast<CAknAppUi*> (CEikonEnv::Static()->AppUi());
     if(appUi){
