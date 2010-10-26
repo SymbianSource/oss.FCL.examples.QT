@@ -29,10 +29,9 @@ public:
 
 private:
     Ui::MainWindow *ui;
-    QGraphicsEllipseItem *mPacman;
+    QGraphicsEllipseItem *mPacman, *mPacCollider;
     QTimer *mUpdateTimer;
     int mPacState;
-    bool bIsMoving;
     QAccelerometer *mAccelerometer;
     qreal xAxis, yAxis;
     QPointF mLastPt;
@@ -45,6 +44,7 @@ private:
     QAudioOutput* mAudio;
     QFile file;
 
+
 private slots:
     void updateGraphics();
     void updateReading();
@@ -53,6 +53,7 @@ private slots:
 
 private:
     void setupBoundries();
+    void checkCollisions();
 
 };
 

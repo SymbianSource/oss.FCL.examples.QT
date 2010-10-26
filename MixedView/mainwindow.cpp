@@ -18,7 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     ui->setupUi(this);
     mPacState = 0;
-    bIsMoving = true;
     xAxis = yAxis = 0;
     mLastPt.setX(0);
     mLastPt.setY(0);
@@ -44,10 +43,16 @@ MainWindow::MainWindow(QWidget *parent) :
     QGraphicsPixmapItem *backGround = mScene->addPixmap(mazeImage);
     backGround->setPos(-140,-200);
 
+    mPacCollider = new QGraphicsEllipseItem(0, 0, 18, 18);
+    mPacCollider->setBrush(QBrush(Qt::transparent));
+    mScene->addItem(mPacCollider);
+
     mPacman = new QGraphicsEllipseItem(0, 0, 18, 18);
     mPacman->setBrush(QBrush(Qt::yellow));
     mPacman->setSpanAngle(4500);
     mScene->addItem(mPacman);
+
+
 
     // lets place a pause button in the view
     pauseButton = new QPushButton("Pause");
@@ -60,7 +65,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->mainGraphicsView->show();
 
     mPacman->setPos(20,-8);
-
+    mPacCollider->setPos(20, -8);
     // declare our update timer
     mUpdateTimer = new QTimer(this);
     connect(mUpdateTimer, SIGNAL(timeout()), this, SLOT(updateGraphics()));
@@ -69,6 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // connect the accelerometer to the readingChanged signal
     connect(mAccelerometer, SIGNAL(readingChanged()), this, SLOT(updateReading()));
     mNumHits = 1;
+
 }
 
 MainWindow::~MainWindow()
@@ -80,8 +86,7 @@ void MainWindow::updateGraphics() {
     if (mPause)
         return;
 
-    if (!bIsMoving)
-        return;
+
     // update the pacman mouth state
     // will eventually change this to a graphic
     switch (mPacState) {
@@ -101,21 +106,29 @@ void MainWindow::updateGraphics() {
     mPacState += 1;
     if (mPacState == 2)
         mPacState = 0;
+
 }
 
 void MainWindow::updateReading() {
     if (mPause)
         return;
-    mNumHits = mPacman->collidingItems().count();
-    if (mNumHits == 1)
-        mLastPt = mPacman->pos();
+
+    checkCollisions();
     xAxis = (xAxis + mAccelerometer->reading()->x()) / 2;
     yAxis = (yAxis + mAccelerometer->reading()->y()) / 2;
 
-    QPointF pt =  mPacman->pos();
+}
+
+void MainWindow::checkCollisions() {
+
+    mNumHits = mPacCollider->collidingItems().count();
+    if (mNumHits == 2)
+        mLastPt = mPacCollider->pos();
+
+    QPointF pt =  mPacCollider->pos();
 
     pt.setX(pt.x()-xAxis);
-    pt.setY(pt.y()+yAxis);    
+    pt.setY(pt.y()+yAxis);
 
     if (pt.x()<-103)
         pt.setX(-103);
@@ -127,11 +140,15 @@ void MainWindow::updateReading() {
     else if (pt.y()>145)
         pt.setY(145);
 
-    if (mNumHits == 1) {
-        mPacman->setPos(pt);      
+    if (mNumHits == 2) {
+        mPacCollider->setPos(pt);
+       // mPacman->setPos(pt);
     }
-    else
-        mPacman->setPos(mLastPt);
+    else {
+        mPacCollider->setPos(mLastPt);
+
+    }
+     mPacman->setPos(mLastPt);
 
 }
 
