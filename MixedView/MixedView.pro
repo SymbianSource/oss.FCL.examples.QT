@@ -21,7 +21,7 @@ INCLUDEPATH+=../../../src/network ../../../src/sensors ../../src/multimedia ../.
 
 
 CONFIG += mobility
-MOBILITY += contacts messaging systeminfo sensors multimedia
+MOBILITY += sensors multimedia
 
 symbian {
     TARGET.UID3 = 0xe4cef592
