@@ -54,6 +54,7 @@ MyWebWidget::MyWebWidget(QWidget *parent)
     connect(m_lineEdit,SIGNAL(editingFinished()),SLOT(openUrl()));
     connect(m_view,SIGNAL(loadFinished(bool)),SLOT(onLoadFinished(bool)));
 
+
     //connect the toolbar as well
     connect(m_toolbar,SIGNAL(goBack()),SLOT(loadPreviousPage()));
 }
@@ -74,6 +75,7 @@ void MyWebWidget::loadPreviousPage()
 
 void MyWebWidget::openUrl()
 {
+
     QString url(m_lineEdit->text());
     if(!url.contains("http://",Qt::CaseInsensitive))
         url.prepend("http://");

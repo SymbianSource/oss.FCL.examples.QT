@@ -26,7 +26,7 @@ MOBILITY += sensors multimedia
 symbian {
     TARGET.UID3 = 0xe4cef592
     LIBS += -lcone -leikcore -lavkon
-    TARGET.CAPABILITY += LocalServices ReadUserData WriteUserData NetworkServices UserEnvironment Location ReadDeviceData
+   # TARGET.CAPABILITY += LocalServices ReadUserData WriteUserData NetworkServices UserEnvironment Location ReadDeviceData
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x10000000
 }

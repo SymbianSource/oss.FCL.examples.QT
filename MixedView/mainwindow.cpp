@@ -10,6 +10,15 @@
 #include <QStringList>
 #include <QSound>
 
+// define the borders of the image
+#define LEFT_EDGE -103
+#define RIGHT_EDGE 180
+#define TOP_EDGE -156
+#define BOTTOM_EDGE 145
+// The number of Hits is always at least 2
+// since there is a visible and invisible image
+// on top of each other at the same coordinates
+#define HITS 2
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,8 +61,6 @@ MainWindow::MainWindow(QWidget *parent) :
     mPacman->setSpanAngle(4500);
     mScene->addItem(mPacman);
 
-
-
     // lets place a pause button in the view
     pauseButton = new QPushButton("Pause");
     connect(pauseButton, SIGNAL(clicked()), this, SLOT(pause()));
@@ -85,8 +92,6 @@ MainWindow::~MainWindow()
 void MainWindow::updateGraphics() {
     if (mPause)
         return;
-
-
     // update the pacman mouth state
     // will eventually change this to a graphic
     switch (mPacState) {
@@ -119,10 +124,12 @@ void MainWindow::updateReading() {
 
 }
 
+
 void MainWindow::checkCollisions() {
 
+
     mNumHits = mPacCollider->collidingItems().count();
-    if (mNumHits == 2)
+    if (mNumHits == HITS)
         mLastPt = mPacCollider->pos();
 
     QPointF pt =  mPacCollider->pos();
@@ -130,19 +137,18 @@ void MainWindow::checkCollisions() {
     pt.setX(pt.x()-xAxis);
     pt.setY(pt.y()+yAxis);
 
-    if (pt.x()<-103)
-        pt.setX(-103);
-    else if (pt.x()>180)
-        pt.setX(180);
+    if (pt.x()< LEFT_EDGE)
+        pt.setX(LEFT_EDGE);
+    else if (pt.x()>RIGHT_EDGE)
+        pt.setX(RIGHT_EDGE);
 
-    if (pt.y()<-156)
-        pt.setY(-156);
-    else if (pt.y()>145)
-        pt.setY(145);
+    if (pt.y()<TOP_EDGE)
+        pt.setY(TOP_EDGE);
+    else if (pt.y()>BOTTOM_EDGE)
+        pt.setY(BOTTOM_EDGE);
 
-    if (mNumHits == 2) {
+    if (mNumHits == HITS) {
         mPacCollider->setPos(pt);
-       // mPacman->setPos(pt);
     }
     else {
         mPacCollider->setPos(mLastPt);
