@@ -22,7 +22,7 @@ MOBILITY = location
 
 symbian {
     TARGET.UID3 = 0xe1b774b2
-    TARGET.CAPABILITY += LocalServices ReadUserData WriteUserData NetworkServices UserEnvironment Location ReadDeviceData
+    TARGET.CAPABILITY += LocalServices ReadUserData WriteUserData NetworkServices UserEnvironment Location
     TARGET.EPOCSTACKSIZE = 0x14000
     TARGET.EPOCHEAPSIZE = 0x020000 0x4000000
 }
